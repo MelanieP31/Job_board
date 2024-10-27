@@ -2,8 +2,6 @@ package com.example.back_job.dto;
 
 import java.sql.Date;
 
-import com.example.back_job.entity.Companies;
-
 import lombok.Getter;
 import lombok.Setter;
 
