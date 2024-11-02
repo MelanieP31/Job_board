@@ -4,26 +4,28 @@ USE `job_board` ;
 -- -------------------------------------
 -- Supprimer pour recréé, a supprimer plus tard juste pour tester
 -- -------------------------------------
-DROP TABLE IF EXISTS `application`;
-DROP TABLE IF EXISTS `advertisements`;
+DROP TABLE IF EXISTS `applications`;
+DROP TABLE IF EXISTS `joboffer`;
 DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `companies`;
 
 -- -------------------------------------
--- TABLE COMPANIES  (cmp = companies)
+-- TABLE COMPANIES 
 -- --------------------------------------
 CREATE TABLE IF NOT EXISTS `companies` (
-  `cmp_id` INT NOT NULL auto_increment,
+  `company_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL UNIQUE,
   `description` VARCHAR(255),
   `location` VARCHAR(255), 
+  `password` VARCHAR(255),
+  `validated` BOOLEAN DEFAULT FALSE,
 
-  PRIMARY KEY  (`cmp_id`)
+  PRIMARY KEY  (`company_id`)
 
   -- OneToMany : One Companies -> Many advertisement
 )
-auto_increment =1;
+AUTO_INCREMENT = 1;
 
 
 -- -------------------------------------
@@ -31,90 +33,108 @@ auto_increment =1;
 -- --------------------------------------
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` INT NOT NULL UNIQUE auto_increment,
+  `user_id` INT NOT NULL UNIQUE AUTO_INCREMENT,
   `first_name` VARCHAR(255),
   `last_name` VARCHAR(255),
   `email` VARCHAR(255),
   `phone` VARCHAR(10),
   `description` VARCHAR(255),
   `password` VARCHAR(255),
+  `city` VARCHAR(255),
+  `user_type` VARCHAR(10) CHECK (`user_type` IN ('admin', 'company', 'user')),
+  `creation_date` DATETIME,
+  `cv_file` VARCHAR(255),
 
   -- OneToMany : One User -> Many application
+  -- OneToOne : One user(company) -> One companie
 
   PRIMARY KEY  (`user_id`)
 
 )
-auto_increment =1;
+AUTO_INCREMENT = 1;
 
 -- -------------------------------------
--- TABLE ADVERTISMENTS  (ad = advertisement)
+-- TABLE JOBOFFER  (ad = advertisement)
 -- --------------------------------------
 
-CREATE TABLE IF NOT EXISTS `advertisements` (
-  `ad_id` INT NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `joboffer` (
+  `job_id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255),
   `short_description` VARCHAR(255),
-  `long_description` VARCHAR(255),
+  `long_description` LONGTEXT,
   `contract_type` VARCHAR(255),
-  `salary` INT,
   `creation_date` DATETIME,
-
-  `cmp_id` INT,
-  PRIMARY KEY  (`ad_id`),
+  `location` VARCHAR(100),
+  `company_id` INT,
+  
+  PRIMARY KEY  (`job_id`),
 
   -- Les contrainites des FK
-  CONSTRAINT `fk_cmp` FOREIGN KEY (`cmp_id`) REFERENCES `companies` (`cmp_id`) ON DELETE CASCADE
+  CONSTRAINT `fk_company` FOREIGN KEY (`company_id`) REFERENCES `companies` (`company_id`) ON DELETE CASCADE
 )
-auto_increment =1;
+AUTO_INCREMENT = 1;
 
 -- -------------------------------------
--- TABLE ADMIN
+-- TABLE APPLICATIONS
 -- --------------------------------------
 
-CREATE TABLE IF NOT EXISTS `application` (
-  `application_id` INT NOT NULL auto_increment,
-  `application_date` DATETIME,
+CREATE TABLE IF NOT EXISTS `applications` (
+  `app_id` INT NOT NULL AUTO_INCREMENT,
+  `app_date` DATETIME,
   `message` VARCHAR(255),
 
  -- Many-to-one : Many application --> one advert
-  `ad_id` INT,
+  `job_id` INT,
  -- Many-to-one : Many application --> One candidats
   `user_id` INT,
 
-  PRIMARY KEY  (`application_id`),
+  PRIMARY KEY  (`app_id`),
 
   -- Les contrainte FK
-  CONSTRAINT `fk_ad` FOREIGN KEY (`ad_id`) REFERENCES `advertisements` (`ad_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_job` FOREIGN KEY (`job_id`) REFERENCES `joboffer` (`job_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 
 )
-auto_increment =1;
+AUTO_INCREMENT = 1;
+
+-- Exemple (généré)
+-- -------------------------------------
+-- Insérer des exemples dans la table COMPANIES
+-- -------------------------------------
+INSERT INTO `companies` (`name`, `email`, `description`, `location`, `password`, `validated`)
+VALUES 
+    ('Tech Solutions', 'contact@techsolutions.com', 'Leader in IT consulting and development', 'Paris', 'password123', TRUE),
+    ('Green Energy', 'hr@greenenergy.com', 'Renewable energy provider', 'Lyon', 'password456', FALSE),
+    ('EduInnov', 'info@eduinnov.com', 'Innovative solutions for educational institutions', 'Marseille', 'password789', TRUE);
+
+-- -------------------------------------
+-- Insérer des exemples dans la table USERS
+-- -----------joboffer--------------------------
+INSERT INTO `users` (`first_name`, `last_name`, `email`, `phone`, `description`, `password`, `city`, `user_type`, `cv_file`)
+VALUES 
+    ('Alice', 'Martin', 'alice.martin@example.com', '0612345678', 'Experienced data scientist', 'alicepass', 'Paris', 'user', '/cv/alice_martin.pdf'),
+    ('Bob', 'Dupont', 'bob.dupont@example.com', '0623456789', 'Senior software engineer', 'bobpass', 'Lyon', 'user', '/cv/bob_dupont.pdf'),
+    ('Charlie', 'Durand', 'charlie.durand@example.com', '0634567890', 'HR manager at Green Energy', 'charliepass', 'Lyon', 'company', NULL),
+    ('Admin', 'Admin', 'admin@example.com', NULL, 'System administrator', 'adminpass', 'Toulouse', 'admin', NULL);
+
+-- -------------------------------------
+-- Insérer des exemples dans la table JOBOFFER
+-- -------------------------------------
+INSERT INTO `joboffer` (`title`, `short_description`, `long_description`, `contract_type`, `location`, `company_id`)
+VALUES 
+    ('Data Analyst', 'Analyze data for business insights', 'Responsible for data analysis, reporting, and dashboard creation.', 'CDI', 'Paris', 1),
+    ('Software Developer', 'Develop software solutions', 'Involved in all stages of software development life cycle.', 'CDD', 'Lyon', 2),
+    ('Project Manager', 'Manage IT projects', 'Oversee and ensure the successful delivery of projects.', 'Freelance', 'Marseille', 1),
+    ('Renewable Energy Engineer', 'Design renewable energy systems', 'Work on green energy projects.', 'CDI', 'Lyon', 2);
+
+-- -------------------------------------
+-- Insérer des exemples dans la table APPLICATIONS
+-- -------------------------------------
+INSERT INTO `applications` (`app_date`, `message`, `job_id`, `user_id`)
+VALUES 
+    (NOW(), 'I am very interested in this position.', 1, 1),
+    (NOW(), 'I believe my skills are a perfect fit for this job.', 2, 2),
+    (NOW(), 'Looking forward to contributing to your team.', 3, 1),
+    (NOW(), 'I have experience in renewable energy and would like to apply.', 4, 2);
 
 
--- Gestion des suppression : qd une ligne supprimer dans les table One ex: une annonce supprimer
--- alors il faut supprimer les candidature : ON DELETE CASCADE
--- sinon ON DELETE NULL (pas trop compris a part 'au cas où ... )
-
--- Insérer dans la table COMPANIES
-INSERT INTO `companies` (`name`, `email`, `description`, `location`) VALUES 
-('Tech Corp', 'contact@techcorp.com', 'A leading tech company', 'Paris'),
-('BioGen', 'info@biogen.com', 'Biotech innovation company', 'Lyon'),
-('FinTech Solutions', 'support@fintech.com', 'FinTech company', 'Marseille');
-
--- Insérer dans la table USERS
-INSERT INTO `users` (`last_name`, `first_name`, `email`, `phone`, `description`, `password`) VALUES 
-('Doe', 'John', 'john.doe@gmail.com', 0612121212, 'I like Java, please hire me!', 'password123'),
-('Smith', 'Jane', 'jane.smith@outlook.com', 0634343434, "I'm looking for a job in DataScience",'password456'),
-('Brown', 'Emily', 'emily.brown@gmail.com', 0656565656, 'En recherche de postes en biotechnologie', 'password789');
-
--- Insérer dans la table ADVERTISEMENTS
-INSERT INTO `advertisements` (`title`, `short_description`, `long_description`, `contract_type`, `salary`,`creation_date`, `cmp_id`) VALUES 
-('Software Developer', 'Looking for a full-stack developer', 'We are seeking a full-stack developer with experience in JavaScript and Java.', 'CDI', '30', NOW(), 1),
-('Biotech Engineer', 'Seeking a senior engineer', 'BioGen is hiring a senior biotech engineer to work on innovative projects.', 'CDD', '50', NOW(), 2),
-('Data Scientist', 'Data Science role in FinTech', 'FinTech Solutions is looking for a data scientist to help develop predictive models.', 'CDI', '35', NOW(), 3);
-
--- Insérer dans la table APPLICATION
-INSERT INTO `application` (`application_date`, `message`, `ad_id`, `user_id`) VALUES 
-(NOW(), 'I am interested in the Software Developer role.', 1, 1),
-(NOW(), 'I would like to apply for the Biotech Engineer position.', 2, 3),
-(NOW(), 'I am a passionate data scientist eager to join FinTech Solutions.', 3, 2);
