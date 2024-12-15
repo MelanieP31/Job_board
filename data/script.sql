@@ -1,31 +1,17 @@
 CREATE DATABASE IF NOT EXISTS `job_board`;
 USE `job_board` ;
 
--- -------------------------------------
--- Supprimer pour recréé, a supprimer plus tard juste pour tester
--- -------------------------------------
+DROP TABLE IF EXISTS `user_experiences`;
+DROP TABLE IF EXISTS `experiences`;
+DROP TABLE IF EXISTS `user_formations`;
+DROP TABLE IF EXISTS `formations`;
+DROP TABLE IF EXISTS `user_competencies`;
+DROP TABLE IF EXISTS `competencies`;
 DROP TABLE IF EXISTS `applications`;
 DROP TABLE IF EXISTS `joboffer`;
-DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `companies`;
-
--- -------------------------------------
--- TABLE COMPANIES 
--- --------------------------------------
-CREATE TABLE IF NOT EXISTS `companies` (
-  `company_id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL UNIQUE,
-  `description` VARCHAR(255),
-  `location` VARCHAR(255), 
-  `password` VARCHAR(255),
-  `validated` BOOLEAN DEFAULT FALSE,
-
-  PRIMARY KEY  (`company_id`)
-
-  -- OneToMany : One Companies -> Many advertisement
-)
-AUTO_INCREMENT = 1;
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `admins`;
 
 
 -- -------------------------------------
@@ -36,41 +22,56 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_id` INT NOT NULL UNIQUE AUTO_INCREMENT,
   `first_name` VARCHAR(255),
   `last_name` VARCHAR(255),
-  `email` VARCHAR(255),
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
   `phone` VARCHAR(10),
   `description` VARCHAR(255),
-  `password` VARCHAR(255),
   `city` VARCHAR(255),
-  `user_type` VARCHAR(10) CHECK (`user_type` IN ('admin', 'company', 'user')),
-  `creation_date` DATETIME,
-  `cv_file` VARCHAR(255),
-
-  -- OneToMany : One User -> Many application
-  -- OneToOne : One user(company) -> One companie
-
+  `creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY  (`user_id`)
 
+  -- One-To-Many (1 USER peut appliquer à plusieurs JOBOFFER)
 )
 AUTO_INCREMENT = 1;
 
 -- -------------------------------------
--- TABLE JOBOFFER  (ad = advertisement)
+-- TABLE COMPANIES 
+-- --------------------------------------
+CREATE TABLE IF NOT EXISTS `companies` (
+  `company_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `description` TEXT,
+  `location` VARCHAR(255), 
+  `password` VARCHAR(255) NOT NULL,
+
+  PRIMARY KEY  (`company_id`)
+
+  -- One-To-Many : (Une COMPANIE peut poster plusieur JOBOFFER)
+)
+AUTO_INCREMENT = 1;
+
+-- -------------------------------------
+-- TABLE JOBOFFER
 -- --------------------------------------
 
 CREATE TABLE IF NOT EXISTS `joboffer` (
   `job_id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255),
   `short_description` VARCHAR(255),
-  `long_description` LONGTEXT,
+  `long_description` TEXT,
   `contract_type` VARCHAR(255),
-  `creation_date` DATETIME,
+  `creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `location` VARCHAR(100),
+  
   `company_id` INT,
   
   PRIMARY KEY  (`job_id`),
 
-  -- Les contrainites des FK
+  -- Many-To-One (Plusieurs JOBOFFER peuvent provenir d'une seule COMPANIE)
   CONSTRAINT `fk_company` FOREIGN KEY (`company_id`) REFERENCES `companies` (`company_id`) ON DELETE CASCADE
+
+  -- One-To-Many (Une JobOffer peut avoir de multiple APPLICATIONS)
 )
 AUTO_INCREMENT = 1;
 
@@ -80,12 +81,13 @@ AUTO_INCREMENT = 1;
 
 CREATE TABLE IF NOT EXISTS `applications` (
   `app_id` INT NOT NULL AUTO_INCREMENT,
-  `app_date` DATETIME,
+  `app_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `message` VARCHAR(255),
+  `status` ENUM('in progress', 'accepted', 'refused') DEFAULT 'in progress',
 
- -- Many-to-one : Many application --> one advert
+ -- Many-To-One (Plusieurs APPLICATION sur une JOBOFFER)
   `job_id` INT,
- -- Many-to-one : Many application --> One candidats
+ -- Many-to-one : (Plusieurs APPLICATION peuvent être faite par un USER)
   `user_id` INT,
 
   PRIMARY KEY  (`app_id`),
@@ -97,44 +99,81 @@ CREATE TABLE IF NOT EXISTS `applications` (
 )
 AUTO_INCREMENT = 1;
 
--- Exemple (généré)
--- -------------------------------------
--- Insérer des exemples dans la table COMPANIES
--- -------------------------------------
-INSERT INTO `companies` (`name`, `email`, `description`, `location`, `password`, `validated`)
-VALUES 
-    ('Tech Solutions', 'contact@techsolutions.com', 'Leader in IT consulting and development', 'Paris', 'password123', TRUE),
-    ('Green Energy', 'hr@greenenergy.com', 'Renewable energy provider', 'Lyon', 'password456', FALSE),
-    ('EduInnov', 'info@eduinnov.com', 'Innovative solutions for educational institutions', 'Marseille', 'password789', TRUE);
-
--- -------------------------------------
--- Insérer des exemples dans la table USERS
--- -----------joboffer--------------------------
-INSERT INTO `users` (`first_name`, `last_name`, `email`, `phone`, `description`, `password`, `city`, `user_type`, `cv_file`)
-VALUES 
-    ('Alice', 'Martin', 'alice.martin@example.com', '0612345678', 'Experienced data scientist', 'alicepass', 'Paris', 'user', '/cv/alice_martin.pdf'),
-    ('Bob', 'Dupont', 'bob.dupont@example.com', '0623456789', 'Senior software engineer', 'bobpass', 'Lyon', 'user', '/cv/bob_dupont.pdf'),
-    ('Charlie', 'Durand', 'charlie.durand@example.com', '0634567890', 'HR manager at Green Energy', 'charliepass', 'Lyon', 'company', NULL),
-    ('Admin', 'Admin', 'admin@example.com', NULL, 'System administrator', 'adminpass', 'Toulouse', 'admin', NULL);
-
--- -------------------------------------
--- Insérer des exemples dans la table JOBOFFER
--- -------------------------------------
-INSERT INTO `joboffer` (`title`, `short_description`, `long_description`, `contract_type`, `location`, `company_id`)
-VALUES 
-    ('Data Analyst', 'Analyze data for business insights', 'Responsible for data analysis, reporting, and dashboard creation.', 'CDI', 'Paris', 1),
-    ('Software Developer', 'Develop software solutions', 'Involved in all stages of software development life cycle.', 'CDD', 'Lyon', 2),
-    ('Project Manager', 'Manage IT projects', 'Oversee and ensure the successful delivery of projects.', 'Freelance', 'Marseille', 1),
-    ('Renewable Energy Engineer', 'Design renewable energy systems', 'Work on green energy projects.', 'CDI', 'Lyon', 2);
-
--- -------------------------------------
--- Insérer des exemples dans la table APPLICATIONS
--- -------------------------------------
-INSERT INTO `applications` (`app_date`, `message`, `job_id`, `user_id`)
-VALUES 
-    (NOW(), 'I am very interested in this position.', 1, 1),
-    (NOW(), 'I believe my skills are a perfect fit for this job.', 2, 2),
-    (NOW(), 'Looking forward to contributing to your team.', 3, 1),
-    (NOW(), 'I have experience in renewable energy and would like to apply.', 4, 2);
 
 
+-- -------------------------------------
+-- TABLE ADMINS
+-- -------------------------------------
+CREATE TABLE IF NOT EXISTS `admins` (
+  `admin_id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`admin_id`)
+);
+
+-- -------------------------
+-- TABLE COMPETENCIES
+-- -----------------------------
+CREATE TABLE IF NOT EXISTS `competencies` (
+  `competency_id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+
+  PRIMARY KEY (`competency_id`)
+)
+AUTO_INCREMENT = 1;
+
+-- TABLE DE LIAISON entre USER et COMPETENCES
+
+CREATE TABLE IF NOT EXISTS `user_competencies`(
+  `user_id` INT NOT NULL,
+  `competency_id`INT NOT NULL,
+
+  PRIMARY KEY (`user_id`, `competency_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`competency_id`) REFERENCES `competencies` (`competency_id`) ON DELETE CASCADE
+);
+
+-- -------------------------------------
+-- TABLE FORMATIONS
+-- -------------------------------------
+CREATE TABLE IF NOT EXISTS `formations` (
+    `formation_id` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `institution` VARCHAR(255),
+    `start_date` DATE,
+    `end_date` DATE,
+    PRIMARY KEY (`formation_id`)
+);
+
+-- TABLE DE LIAISON entre USER et FORMATIONS
+
+CREATE TABLE IF NOT EXISTS `user_formations` (
+    `user_id` INT NOT NULL,
+    `formation_id` INT NOT NULL,
+    PRIMARY KEY (`user_id`, `formation_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`formation_id`) REFERENCES `formations` (`formation_id`) ON DELETE CASCADE
+);
+
+-- -------------------------------------
+-- TABLE EXPERIENCES
+-- -------------------------------------
+CREATE TABLE IF NOT EXISTS `experiences` (
+    `experience_id` INT NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `company` VARCHAR(255),
+    `start_date` DATE,
+    `end_date` DATE,
+    `description` VARCHAR(255),
+    PRIMARY KEY (`experience_id`)
+);
+
+-- TABLE DE LIAISON entre USER et EXPERIENCES
+
+CREATE TABLE IF NOT EXISTS `user_experiences` (
+    `user_id` INT NOT NULL,
+    `experience_id` INT NOT NULL,
+    PRIMARY KEY (`user_id`, `experience_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`experience_id`) ON DELETE CASCADE
+);
