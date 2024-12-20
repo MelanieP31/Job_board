@@ -1,0 +1,10 @@
+appsettings.Development.json
+
+bin/
+obj/
+
+.log
+
+.user
+.vs/
+.tmp
