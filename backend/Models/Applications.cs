@@ -19,7 +19,7 @@ public class Applications{
     [Required]
     public string Status {get; set;} = "in progress";
 
-    //FK
+    //Relations
     [Column("job_id")]
     public int JobId {get; set; }
 
@@ -27,7 +27,7 @@ public class Applications{
     public Joboffer? JobOffer; 
 
     [Column("user_id")]
-    public int UserId{get; set; }
+    public int UserId {get; set; }
 
     [ForeignKey("UserId")]
     public Users? User; 

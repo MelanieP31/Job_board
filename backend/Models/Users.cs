@@ -37,4 +37,10 @@ public class Users{
     [Column("creation_date")]
     public DateTime? CreationDate {get; set;}
 
+    // Relations
+    public ICollection<Applications>? Applications { get; set; } // One-to-Many
+    public ICollection<UserCompetencies>? UserCompetencies { get; set; } // Many-to-Many
+    public ICollection<UserFormations>? UserFormations { get; set; } // Many-to-Many
+    public ICollection<UserExperiences>? UserExperiences { get; set; } // Many-to-Many
+
 }

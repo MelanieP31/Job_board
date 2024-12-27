@@ -26,10 +26,11 @@ public class Joboffer{
     [Column("location")]
     public string? Location {get; set;}
 
-    //FK companies
+    //Relations
     [Column("company_id")]
-    public int CompanyId {get; set;}
-    
+    public int CompanyId {get; set;}   
     [ForeignKey("CompanyId")]
     public Companies? Company {get; set;}
+
+    public ICollection<Applications>? Applications { get; set; }
 }

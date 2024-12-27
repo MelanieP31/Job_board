@@ -24,7 +24,6 @@ public class Experiences{
     public string? Description {get; set; }
 
     //FK
-    [Column("user_id")]
-    public int UserId {get; set; }
-    public Users? User {get; set;}
+    public ICollection<UserExperiences>? UserExperiences { get; set; }
+
 }

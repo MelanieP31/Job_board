@@ -24,8 +24,6 @@ public class Formations{
     public DateTime? EndDate {get; set; }
 
     //FK
-    [Column("user_id")]
-    public int UserId {get; set; }
-    public Users? User {get; set; }
+    public ICollection<UserFormations>? UserFormations { get; set; }
 
 }

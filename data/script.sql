@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `creation_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY  (`user_id`)
 
-  -- One-To-Many (1 USER peut appliquer à plusieurs JOBOFFER)
+  -- One-To-Many (1 USER peut faire plusieurs APPLICATIONS)
 )
 AUTO_INCREMENT = 1;
 
