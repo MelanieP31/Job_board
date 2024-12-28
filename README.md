@@ -61,7 +61,7 @@ The goal of this application is to create a space where recruiters can publish j
 
 Here is the UML diagram of the database structure:
 
-![UML Diagram](./umlData.png)
+![UML Diagram](data/umldata.png)
 
 
 

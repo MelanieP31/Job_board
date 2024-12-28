@@ -1,9 +1,7 @@
 CREATE DATABASE IF NOT EXISTS `job_board`;
 USE `job_board` ;
 
-DROP TABLE IF EXISTS `user_experiences`;
 DROP TABLE IF EXISTS `experiences`;
-DROP TABLE IF EXISTS `user_formations`;
 DROP TABLE IF EXISTS `formations`;
 DROP TABLE IF EXISTS `user_competencies`;
 DROP TABLE IF EXISTS `competencies`;
@@ -31,6 +29,10 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY  (`user_id`)
 
   -- One-To-Many (1 USER peut faire plusieurs APPLICATIONS)
+  -- One-Yo-Many (1 USER peut avoir plusieurs formations)
+  -- One-To-Many (1 USER peut avoir plusieur expériences) 
+  -- Many-To-Many (plusieurs USERS peuvent avoir plusieurs COMPETENCES)
+  
 )
 AUTO_INCREMENT = 1;
 
@@ -99,8 +101,6 @@ CREATE TABLE IF NOT EXISTS `applications` (
 )
 AUTO_INCREMENT = 1;
 
-
-
 -- -------------------------------------
 -- TABLE ADMINS
 -- -------------------------------------
@@ -142,17 +142,13 @@ CREATE TABLE IF NOT EXISTS `formations` (
     `institution` VARCHAR(255),
     `start_date` DATE,
     `end_date` DATE,
-    PRIMARY KEY (`formation_id`)
-);
-
--- TABLE DE LIAISON entre USER et FORMATIONS
-
-CREATE TABLE IF NOT EXISTS `user_formations` (
-    `user_id` INT NOT NULL,
-    `formation_id` INT NOT NULL,
-    PRIMARY KEY (`user_id`, `formation_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`formation_id`) REFERENCES `formations` (`formation_id`) ON DELETE CASCADE
+    `description` TEXT,
+    
+    `user_id` INT,
+    PRIMARY KEY (`formation_id`),
+	CONSTRAINT `fk_user_form` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+    
+    -- Un user peut avoir plusieurs formations 
 );
 
 -- -------------------------------------
@@ -165,15 +161,9 @@ CREATE TABLE IF NOT EXISTS `experiences` (
     `start_date` DATE,
     `end_date` DATE,
     `description` VARCHAR(255),
-    PRIMARY KEY (`experience_id`)
-);
-
--- TABLE DE LIAISON entre USER et EXPERIENCES
-
-CREATE TABLE IF NOT EXISTS `user_experiences` (
-    `user_id` INT NOT NULL,
-    `experience_id` INT NOT NULL,
-    PRIMARY KEY (`user_id`, `experience_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`experience_id`) ON DELETE CASCADE
+    
+    `user_id` INT,    
+    PRIMARY KEY (`experience_id`),
+    CONSTRAINT `fk_user_exp` foreign key (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+    
 );

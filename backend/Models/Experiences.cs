@@ -23,7 +23,12 @@ public class Experiences{
     [Column("description")]
     public string? Description {get; set; }
 
-    //FK
-    public ICollection<UserExperiences>? UserExperiences { get; set; }
+    [Column("user_id")]
+    public int UserId {get; set; }
+
+    [ForeignKey("UserId")]
+    public Users? User {get; set;}
+
+
 
 }

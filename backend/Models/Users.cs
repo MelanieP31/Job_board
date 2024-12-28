@@ -37,7 +37,7 @@ public class Users{
     // Relations
     public ICollection<Applications>? Applications { get; set; }
     public ICollection<UserCompetencies>? UserCompetencies { get; set; }
-    public ICollection<UserFormations>? UserFormations { get; set; } 
-    public ICollection<UserExperiences>? UserExperiences { get; set; }
+    public ICollection<Formations>? Formations { get; set; } 
+    public ICollection<Experiences>? Experiences { get; set; }
 
 }

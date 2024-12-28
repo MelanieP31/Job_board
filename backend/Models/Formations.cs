@@ -16,14 +16,20 @@ public class Formations{
     [Column("name")]
     public string? Name {get; set; }
 
-
     [Column("start_date")]
     public DateTime? StartDate {get; set; }
 
     [Column("end_date")]
     public DateTime? EndDate {get; set; }
 
-    //FK
-    public ICollection<UserFormations>? UserFormations { get; set; }
+    [Column("description")]
+    public string? Description {get; set; }
+
+    [Column("user_id")]
+    public int UserId {get; set; }
+
+    [ForeignKey("UserId")]
+    public Users? User {get; set;}
+
 
 }

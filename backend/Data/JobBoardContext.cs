@@ -18,8 +18,6 @@ namespace backend.Data
         public DbSet<Formations> Formations {get; set;}
         public DbSet<Joboffer> Joboffers {get; set;}
         public DbSet<UserCompetencies> UserCompetencies {get; set;}
-        public DbSet<UserExperiences> UserExperiences {get; set;}
-        public DbSet<UserFormations> UserFormations {get; set;}
         public DbSet<Users> Users {get; set;}
 
         //Méthode pour faire les relations
@@ -46,6 +44,18 @@ namespace backend.Data
                 .HasForeignKey(a => a.CompanyId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Experiences>()
+                .HasOne(a => a.User)
+                .WithMany(k => k.Experiences)
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Formations>()
+                .HasOne(a => a.User)
+                .WithMany(l => l.Formations)
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             //Many-To-Many : les tables de liaisons
             modelBuilder.Entity<UserCompetencies>()
                 .HasKey(uc => new { uc.UserId, uc.CompetencyId });
@@ -60,35 +70,6 @@ namespace backend.Data
                 .WithMany(u => u.UserCompetencies)
                 .HasForeignKey(uc => uc.CompetencyId);
             
-
-            modelBuilder.Entity<UserExperiences>()
-                .HasKey(ue => new { ue.UserId, ue.ExperienceId });
-
-            modelBuilder.Entity<UserExperiences>()
-                .HasOne(ue => ue.User)
-                .WithMany(u => u.UserExperiences)
-                .HasForeignKey(ue => ue.UserId);
-            
-            modelBuilder.Entity<UserExperiences>()
-                .HasOne(ue => ue.Experience)
-                .WithMany(e => e.UserExperiences)
-                .HasForeignKey(ue => ue.ExperienceId);
-
-
-            modelBuilder.Entity<UserFormations>()
-                .HasKey(uf => new { uf.UserId, uf.FormationId });
-
-            modelBuilder.Entity<UserFormations>()
-                .HasOne(uf => uf.User)
-                .WithMany(u => u.UserFormations)
-                .HasForeignKey(uf => uf.UserId);
-            
-            modelBuilder.Entity<UserFormations>()
-                .HasOne(uf => uf.Formation)
-                .WithMany(f => f.UserFormations)
-                .HasForeignKey(uf => uf.FormationId);
-
-
         }
 
     } 
