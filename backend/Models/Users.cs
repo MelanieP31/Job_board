@@ -31,9 +31,6 @@ public class Users{
     [Column("city")]
     public string? City {get; set;}
 
-    [Column("user_type")]
-    public string? UserType {get; set;}
-
     [Column("creation_date")]
     public DateTime? CreationDate {get; set;}
 

@@ -15,7 +15,7 @@ builder.Services.AddScoped<UsersService>();
 // Configure la base de donnée : ajout JobBoardContext et ce que j'ai mis dans appsettings.json
 builder.Services.AddDbContext<JobBoardContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
+        builder.Configuration.GetConnectionString("SqlConnection"),
         new MySqlServerVersion(new Version(8, 0, 32))
     ));
 
