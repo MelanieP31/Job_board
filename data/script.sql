@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `companies` (
 
   PRIMARY KEY  (`company_id`)
 
-  -- One-To-Many : (Une COMPANIE peut poster plusieur JOBOFFER)
+  -- One-To-Many : (Une COMPANIE peut créer plusieur JOBOFFER)
 )
 AUTO_INCREMENT = 1;
 
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `competencies` (
 )
 AUTO_INCREMENT = 1;
 
--- TABLE DE LIAISON entre USER et COMPETENCES
+-- TABLE DE LIAISON entre USER et COMPETENCES Many-To-Many
 
 CREATE TABLE IF NOT EXISTS `user_competencies`(
   `user_id` INT NOT NULL,

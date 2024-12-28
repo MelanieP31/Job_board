@@ -26,7 +26,7 @@ public class Users{
 
     [Column("password")]
     [Required]
-    public string Password {get; set;}
+    public required string Password {get; set;}
 
     [Column("city")]
     public string? City {get; set;}
@@ -38,9 +38,9 @@ public class Users{
     public DateTime? CreationDate {get; set;}
 
     // Relations
-    public ICollection<Applications>? Applications { get; set; } // One-to-Many
-    public ICollection<UserCompetencies>? UserCompetencies { get; set; } // Many-to-Many
-    public ICollection<UserFormations>? UserFormations { get; set; } // Many-to-Many
-    public ICollection<UserExperiences>? UserExperiences { get; set; } // Many-to-Many
+    public ICollection<Applications>? Applications { get; set; }
+    public ICollection<UserCompetencies>? UserCompetencies { get; set; }
+    public ICollection<UserFormations>? UserFormations { get; set; } 
+    public ICollection<UserExperiences>? UserExperiences { get; set; }
 
 }

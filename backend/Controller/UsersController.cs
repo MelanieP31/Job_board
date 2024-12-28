@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controller{
 
-    [Route("api/[controller]")]
-    public class UserController : ControllerBase {
+    [Route("/api/users")]
+    public class UsersController : ControllerBase {
         private readonly UsersService _userService;
 
-        public UserController(UsersService userService){
+        public UsersController(UsersService userService){
             _userService = userService;
         }
 

@@ -10,18 +10,18 @@ public class Companies{
 
     [Column("name")]
     [Required]
-    public string Name {get; set;}
+    public required string Name {get; set;}
 
     [Column("email")]
     [Required]
-    public string Email {get; set;}
+    public required string Email {get; set;}
 
     [Column("description")]
     public string? Description {get; set;}
 
     [Column("password")]
     [Required]
-    public string Password {get; set;}
+    public required string Password {get; set;}
 
     [Column("location")]
     public string? Location {get; set;}

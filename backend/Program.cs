@@ -23,11 +23,13 @@ builder.Services.AddDbContext<JobBoardContext>(options =>
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers(); // Mappe les routes des contrôleurs
+
+app.MapGet("/", () => "API is running ! ");
 
 app.Run();
 

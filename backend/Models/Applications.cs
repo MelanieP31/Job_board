@@ -24,12 +24,12 @@ public class Applications{
     public int JobId {get; set; }
 
     [ForeignKey("JobId")]
-    public Joboffer? JobOffer; 
+    public Joboffer? JobOffer {get; set;} 
 
     [Column("user_id")]
     public int UserId {get; set; }
 
     [ForeignKey("UserId")]
-    public Users? User; 
+    public Users? User {get; set;}
 
 }
