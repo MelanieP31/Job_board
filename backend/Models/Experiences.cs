@@ -29,6 +29,4 @@ public class Experiences{
     [ForeignKey("UserId")]
     public Users? User {get; set;}
 
-
-
 }

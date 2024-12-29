@@ -28,5 +28,24 @@ namespace backend.DataAccess
             _context.SaveChanges();
         }
 
+        //CRUD Update
+        public void UpdateUser(Users user){
+            _context.Users.Update(user);
+            _context.SaveChanges();
+        }
+
+        //CRUD Delete
+        public void DeleteUser(int id){
+            var user = GetUsersByID(id);
+            if (user != null) {
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+            }
+        }
+
+        internal object GetUserByID(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

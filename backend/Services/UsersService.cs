@@ -25,5 +25,35 @@ namespace backend.Services
             }
             return user;
         }
+
+        public void AddUser (Users user) {
+
+            _userDAO.CreateUser(user);
+
+        }
+
+        public void UpdateUser (Users user) {
+
+            _userDAO.UpdateUser(user); 
+
+        }
+
+        public void DeleteUser (int id) {
+
+            var user = _userDAO.GetUserByID(id);
+
+            if (user != null) {
+
+                throw new Exception ("User not found");
+
+            } else {
+
+                _userDAO.DeleteUser(id);
+
+            }
+
+        }
+
+
     }
 } 
