@@ -27,10 +27,14 @@ namespace backend.DataAccess
             _context.SaveChanges();
         }
 
-        //CRUD Update une application
-        public void UpdateApplication(Applications applications){
-            _context.Applications.Update(applications);
-            _context.SaveChanges();
+        public void UpdateApplicationStatus(int applicationId, string newStatus) {
+            var existingApplication = _context.Applications.FirstOrDefault(a => a.AppId == applicationId);
+            if (existingApplication != null) {
+                existingApplication.Status = newStatus; 
+                _context.SaveChanges();
+            } else {
+                throw new Exception("Application not found.");
+            }
         }
 
         //CRUD Delete une application

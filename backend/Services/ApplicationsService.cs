@@ -31,10 +31,8 @@ namespace backend.Services
 
         }
 
-        public void UpdateApplication (Applications applications) {
-
-            _ApplicationsDAO.UpdateApplication(applications); 
-
+        public void UpdateApplication(int id, string newStatus) {
+            _ApplicationsDAO.UpdateApplicationStatus(id, newStatus);
         }
 
         public void DeleteApplication (int id) {

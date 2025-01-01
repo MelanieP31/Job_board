@@ -1,0 +1,70 @@
+using backend.DataAccess;
+using backend.Models;
+using backend.Services;
+using Microsoft.AspNetCore.Mvc;
+
+// Voir toute les applications, 
+//selectionner une application, 
+//ajouter une application, 
+// supprimer une application, 
+// modifier le statut
+namespace backend.Controller{
+
+    [Route("/api/applications")]
+    public class ApplicationsController : ControllerBase {
+        private readonly ApplicationsService _appService;
+
+        public ApplicationsController(ApplicationsService appService){
+            _appService = appService;
+        }
+
+        //GET all 
+        [HttpGet]
+        public IActionResult GetAllApplications(){
+            var applications = _appService.GetAllApplications();
+            return Ok(applications);
+        }
+
+        [HttpGet("id/{id}")]
+        public IActionResult GetApplicationsById (int id) {
+
+            var applications = _appService.GetApplicationsById(id);
+
+            if (applications != null) {
+                return Ok(applications);
+            } else {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddApplications([FromBody] Applications applications) {
+
+            if(applications == null){
+                return BadRequest("Invalid data for applications");
+            }
+           
+            _appService.AddApplication(applications);
+
+            return CreatedAtAction(nameof(GetApplicationsById), new {id = applications.AppId}, applications);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateApplication (int id, [FromBody] string newStatus) {
+            _appService.UpdateApplication(id, newStatus);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteApplication(int id) {
+            var application = _appService.GetApplicationsById(id);
+            if (application == null) {
+                return NotFound($"Application with ID {id} not found.");
+            }
+
+            _appService.DeleteApplication(id);
+            return NoContent(); // 204 No Content
+        }
+
+    }
+}
