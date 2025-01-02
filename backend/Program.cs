@@ -6,8 +6,27 @@ using Pomelo.EntityFrameworkCore.MySql; // MySQL provider
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Ajout services
+// Ajout controller
 builder.Services.AddControllers();
+
+// Ajout DAO et Services
+builder.Services.AddScoped<ApplicationsDAO>();
+builder.Services.AddScoped<ApplicationsService>();
+
+builder.Services.AddScoped<CompaniesDAO>();
+builder.Services.AddScoped<CompaniesService>();
+
+builder.Services.AddScoped<ExperiencesDAO>();
+builder.Services.AddScoped<ExperiencesService>();
+
+builder.Services.AddScoped<FormationsDAO>();
+builder.Services.AddScoped<FormationsService>();
+
+builder.Services.AddScoped<JobOfferDAO>();
+builder.Services.AddScoped<JobOfferService>();
+
+builder.Services.AddScoped<UserCompetenciesDAO>();
+builder.Services.AddScoped<UserCompService>();
 
 builder.Services.AddScoped<UserDAO>();
 builder.Services.AddScoped<UsersService>();

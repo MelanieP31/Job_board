@@ -31,9 +31,9 @@ namespace backend.Services
 
         }
 
-        public void UpdateCompanie (Companies companies) {
+        public void UpdateCompanie (int id, Companies newCompany) {
 
-            _CompaniesDAO.UpdateCompanies(companies); 
+            _CompaniesDAO.UpdateCompanies(id, newCompany); 
 
         }
 

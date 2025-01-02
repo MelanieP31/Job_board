@@ -167,3 +167,55 @@ CREATE TABLE IF NOT EXISTS `experiences` (
     CONSTRAINT `fk_user_exp` foreign key (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
     
 );
+
+INSERT INTO `users` (first_name, last_name, email, password, phone, description, city) 
+VALUES 
+('John', 'Doe', 'john.doe@example.com', 'password123', '1234567890', 'Experienced software developer', 'New York'),
+('Jane', 'Smith', 'jane.smith@example.com', 'securepass', '9876543210', 'Data analyst passionate about AI', 'San Francisco');
+
+INSERT INTO `companies` (name, email, description, location, password) 
+VALUES 
+('TechCorp', 'contact@techcorp.com', 'Innovative technology solutions', 'Seattle', 'techcorp2023'),
+('DataPro', 'hr@datapro.com', 'Data-driven consulting services', 'Boston', 'dataprosecure');
+
+INSERT INTO `joboffer` (title, short_description, long_description, contract_type, location, company_id) 
+VALUES 
+('Software Engineer', 'Develop scalable software solutions', 'We are looking for a skilled software engineer to join our team.', 'Full-Time', 'Remote', 1),
+('Data Scientist', 'Analyze complex data sets', 'Join our analytics team to uncover insights and drive decisions.', 'Part-Time', 'Boston', 2);
+
+INSERT INTO `applications` (app_date, message, status, job_id, user_id) 
+VALUES 
+(NOW(), 'I am excited about this opportunity!', 'in progress', 1, 1),
+(NOW(), 'Looking forward to contributing to your team.', 'in progress', 2, 2);
+
+INSERT INTO `admins` (email, password) 
+VALUES 
+('admin1@jobboard.com', 'adminpass1'),
+('admin2@jobboard.com', 'adminpass2');
+
+INSERT INTO `competencies` (name) 
+VALUES 
+('JavaScript'),
+('Python'),
+('SQL'),
+('Machine Learning'),
+('Project Management');
+
+INSERT INTO `user_competencies` (user_id, competency_id) 
+VALUES 
+(1, 1), -- John Doe knows JavaScript
+(1, 2), -- John Doe knows Python
+(2, 4), -- Jane Smith knows Machine Learning
+(2, 5); -- Jane Smith knows Project Management
+
+INSERT INTO `formations` (name, institution, start_date, end_date, description, user_id) 
+VALUES 
+('Computer Science BSc', 'MIT', '2015-09-01', '2019-06-30', 'Graduated with honors', 1),
+('Data Science Bootcamp', 'General Assembly', '2021-01-01', '2021-06-30', 'Intensive program focused on machine learning', 2);
+
+INSERT INTO `experiences` (title, company, start_date, end_date, description, user_id) 
+VALUES 
+('Software Developer', 'Tech Solutions Inc.', '2019-07-01', '2022-12-31', 'Developed web applications using modern frameworks', 1),
+('Data Analyst', 'Data Insights LLC', '2022-01-01', '2023-12-31', 'Analyzed data and built predictive models', 2);
+
+

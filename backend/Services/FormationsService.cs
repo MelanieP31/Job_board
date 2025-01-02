@@ -30,9 +30,9 @@ namespace backend.Services
 
         }
 
-        public void UpdateFormations (Formations formations) {
+        public void UpdateFormations (int id, Formations formations) {
 
-            _formationDAO.UpdateFormations(formations); 
+            _formationDAO.UpdateFormations(id, formations); 
 
         }
 

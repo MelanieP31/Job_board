@@ -13,11 +13,13 @@ namespace backend.DataAccess
             _context = context;
         }
 
+        // Get all competencies of one user
         public List<Competencies> GetComptenciesByUserId(int userId){
             return [.. _context.UserCompetencies.Where(c => c.UserId == userId).Select(c => c.Competency)];
         }
 
-        public void AddCompetencyByUserId(int userId, int competency_id){
+        //Add competencies to a user
+        public void AddCompetencyToUserId(int userId, int competency_id){
 
             UserCompetencies userCompetencies = new UserCompetencies();
             userCompetencies.UserId = userId;
@@ -27,6 +29,7 @@ namespace backend.DataAccess
             _context.SaveChanges();
         }
 
+        //Delete competency from one user
         public void DeleteCompetencyByUserId(int userId, int competency_id) {
 
             var competency = _context.UserCompetencies

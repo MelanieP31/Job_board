@@ -29,9 +29,17 @@ namespace backend.DataAccess
         }
 
         //CRUD Update
-        public void UpdateExperiences(Experiences experiences){
-            _context.Experiences.Update(experiences);
-            _context.SaveChanges();
+        public void UpdateExperiences(int id, Experiences newExperiences){
+            var existingExperiences = _context.Experiences.FirstOrDefault(a => a.ExperienceId == id);
+            if (existingExperiences != null)
+            {
+                _context.Experiences.Update(newExperiences);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception($"Experience {id} not found");
+            }
         }
 
         //CRUD Delete

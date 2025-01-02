@@ -26,9 +26,6 @@ public class Companies{
     [Column("location")]
     public string? Location {get; set;}
 
-    [Column("validated")]
-    public bool Validated {get; set;}
-
     //Relation One-To-Many 
     public ICollection<Joboffer>? JobOffers {get; set; }
 

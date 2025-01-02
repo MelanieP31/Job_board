@@ -29,13 +29,6 @@ namespace backend.Services
             _jobOfferDAO.CreateJobOffer(jobOffer);
 
         }
-
-        public void UpdateJobOffer (Joboffer jobOffer) {
-
-            _jobOfferDAO.UpdateJobOffer(jobOffer); 
-
-        }
-
         public void DeleteJobOffer (int id) {
 
             var jobOffer = _jobOfferDAO.GetJobOfferByID(id);

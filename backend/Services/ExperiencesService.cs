@@ -30,9 +30,9 @@ namespace backend.Services
 
         }
 
-        public void UpdateExperiences (Experiences experiences) {
+        public void UpdateExperiences (int id, Experiences experiences) {
 
-            _experiencesDAO.UpdateExperiences(experiences); 
+            _experiencesDAO.UpdateExperiences(id, experiences); 
 
         }
 

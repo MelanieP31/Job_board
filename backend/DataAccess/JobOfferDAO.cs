@@ -28,12 +28,8 @@ namespace backend.DataAccess
             _context.SaveChanges();
         }
 
-        //CRUD Update
-        public void UpdateJobOffer(Joboffer job){
-            _context.Joboffers.Update(job);
-            _context.SaveChanges();
-        }
-
+        //CRUD Update --> Cannot modify a job offer.
+       
         //CRUD Delete
         public void DeleteJobOffer(int id){
             var Joboffer = GetJobOfferByID(id);

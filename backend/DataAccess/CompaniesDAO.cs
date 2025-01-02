@@ -3,41 +3,57 @@ using backend.Models;
 
 namespace backend.DataAccess
 {
-    public class CompaniesDAO {
+    public class CompaniesDAO
+    {
 
         private readonly JobBoardContext _context;
 
         //constructeur
-        public CompaniesDAO (JobBoardContext context) {
+        public CompaniesDAO(JobBoardContext context)
+        {
             _context = context;
         }
 
         //CRUD : Get all user
-        public List<Companies> GetAllCompanies(){
+        public List<Companies> GetAllCompanies()
+        {
             return _context.Companies.ToList();
         }
 
         //CRUD : Get One User
-        public Companies? GetCompaniesByID(int id){
+        public Companies? GetCompaniesByID(int id)
+        {
             return _context.Companies.FirstOrDefault(u => u.CompanyId == id);
         }
 
         //CRUD : Create User
-        public void CreateCompanies(Companies company){
+        public void CreateCompanies(Companies company)
+        {
             _context.Companies.Add(company);
             _context.SaveChanges();
         }
 
         //CRUD Update
-        public void UpdateCompanies(Companies company){
-            _context.Companies.Update(company);
-            _context.SaveChanges();
+        public void UpdateCompanies(int id, Companies newCompany)
+        {
+            var existingCompanies = _context.Companies.FirstOrDefault(a => a.CompanyId == id);
+            if (existingCompanies != null)
+            {
+                _context.Companies.Update(newCompany);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception($"Company {id} not found");
+            }
         }
 
         //CRUD Delete
-        public void DeleteCompanies(int id){
+        public void DeleteCompanies(int id)
+        {
             var company = GetCompaniesByID(id);
-            if (company != null) {
+            if (company != null)
+            {
                 _context.Companies.Remove(company);
                 _context.SaveChanges();
             }
