@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using backend.Data;
 using backend.DataAccess;
 using backend.Models;
 
@@ -6,51 +7,52 @@ namespace backend.Services
 {
     public class CompaniesService {
 
-        private CompaniesDAO _CompaniesDAO;
+        private readonly JobBoardContext _context;
 
-        public CompaniesService (CompaniesDAO companiesDAO) {
-            _CompaniesDAO = companiesDAO;
+        public CompaniesService (JobBoardContext context) {
+            _context = context;
         }
 
         public List<Companies> GetAllCompanies () {
-            return _CompaniesDAO.GetAllCompanies();
+            return _context.Companies.ToList();
         }
 
         public Companies? GetCompaniesById (int id) {
-
-            var companies = _CompaniesDAO.GetCompaniesByID(id); 
-            if (companies != null) {
+            var companies = _context.Companies.FirstOrDefault(u => u.CompanyId == id);
+            if (companies == null) {
                 throw new Exception ("Companies not found");
             }
             return companies;
         }
 
-        public void AddCompanies (Companies companies) {
-
-            _CompaniesDAO.CreateCompanies(companies);
-
+        public void AddCompanies (Companies company) {
+            _context.Companies.Add(company);
+            _context.SaveChanges();
         }
 
         public void UpdateCompanie (int id, Companies newCompany) {
-
-            _CompaniesDAO.UpdateCompanies(id, newCompany); 
-
+            var existingCompanies = _context.Companies.FirstOrDefault(a => a.CompanyId == id);
+            if (existingCompanies != null)
+            {
+                _context.Companies.Update(newCompany);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception($"Company {id} not found");
+            }; 
         }
 
         public void DeleteCompanies (int id) {
-
-            var companies = _CompaniesDAO.GetCompaniesByID(id);
-
-            if (companies != null) {
-
+            var company = GetCompaniesById(id);
+            if (company != null)
+            {
+                _context.Companies.Remove(company);
+                _context.SaveChanges();
+            } else {
                 throw new Exception ("Companies not found");
 
-            } else {
-
-                _CompaniesDAO.DeleteCompanies(id);
-
             }
-
         }
     }
 }

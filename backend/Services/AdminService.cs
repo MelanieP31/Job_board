@@ -1,21 +1,20 @@
-using System.Diagnostics;
-using backend.DataAccess;
+using backend.Data;
 using backend.Models;
 
 namespace backend.Services
 {
     public class AdminService{
 
-        private AdminDAO _AdminDAO;
+        private readonly JobBoardContext _context;
 
-        public AdminService(AdminDAO adminDAO){
+        public AdminService(JobBoardContext context){
 
-            _AdminDAO = adminDAO;
+            _context = context;
         }
 
-        public Admins? GetAdminByID(int id){
+        public Admins? GetAdminById(int id){
 
-            var admin = _AdminDAO.GetAdminByID(id);
+            var admin = _context.Admins.FirstOrDefault(u => u.AdminId == id);
             
             if(admin == null) {
                 throw new Exception ("Admin not found");

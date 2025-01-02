@@ -1,5 +1,5 @@
 
-using backend.DataAccess;
+using backend.Data;
 using backend.Models;
 
 namespace backend.Services
@@ -7,23 +7,23 @@ namespace backend.Services
     public class UsersService
     {
 
-        private readonly UserDAO _userDAO;
+        private readonly JobBoardContext _context;
 
-        public UsersService(UserDAO userDAO)
+        public UsersService(JobBoardContext context)
         {
-            _userDAO = userDAO;
+            _context = context;
         }
 
         //GetAllUser
         public List<Users> GetAllUsers()
         {
-            return _userDAO.GetAllUsers();
+            return _context.Users.ToList();
         }
 
         //GetUserById
         public Users? GetUserById(int id)
         {
-            var user = _userDAO.GetUsersByID(id);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == id);
             if (user == null)
             {
                 throw new Exception("User not found.");
@@ -33,24 +33,35 @@ namespace backend.Services
 
         public void AddUser(Users user)
         {
-            _userDAO.CreateUser(user);
+            _context.Users.Add(user);
+            _context.SaveChanges();
         }
 
-        public void UpdateUser(int id, Users user)
+        public void UpdateUser(int id, Users newUser)
         {
-            _userDAO.UpdateUser(id, user);
+            var existingUser = _context.Users.FirstOrDefault(a => a.UserId == id);
+            if (existingUser != null)
+            {
+                _context.Users.Update(newUser);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new Exception($"User {id} not found");
+            }
         }
 
         public void DeleteUser(int id)
         {
-            var user = _userDAO.GetUserByID(id);
+            var user = GetUserById(id);
             if (user != null)
             {
-                throw new Exception("User not found");
+                _context.Users.Remove(user);
+                _context.SaveChanges();
             }
             else
             {
-                _userDAO.DeleteUser(id);
+                throw new Exception("User not found");
             }
         }
     }
