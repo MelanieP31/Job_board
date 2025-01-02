@@ -2,7 +2,7 @@
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Data
+namespace backend.Configuration
 {
     // :DbContext = héritage de DbContext
     public class JobBoardContext : DbContext{

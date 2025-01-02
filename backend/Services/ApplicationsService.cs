@@ -1,4 +1,4 @@
-using backend.Data;
+using backend.Configuration;
 using backend.Models;
 
 namespace backend.Services

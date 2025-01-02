@@ -1,5 +1,4 @@
-using backend.Data; // Import JobBoardContext
-using backend.DataAccess;
+using backend.Configuration; // Import JobBoardContext
 using backend.Services;
 using Microsoft.EntityFrameworkCore; // Import EF Core
 using Pomelo.EntityFrameworkCore.MySql; // MySQL provider
@@ -10,25 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Ajout DAO et Services
-builder.Services.AddScoped<ApplicationsDAO>();
 builder.Services.AddScoped<ApplicationsService>();
-
-builder.Services.AddScoped<CompaniesDAO>();
 builder.Services.AddScoped<CompaniesService>();
-
-builder.Services.AddScoped<ExperiencesDAO>();
 builder.Services.AddScoped<ExperiencesService>();
-
-builder.Services.AddScoped<FormationsDAO>();
 builder.Services.AddScoped<FormationsService>();
-
-builder.Services.AddScoped<JobOfferDAO>();
 builder.Services.AddScoped<JobOfferService>();
-
-builder.Services.AddScoped<UserCompetenciesDAO>();
 builder.Services.AddScoped<UserCompService>();
-
-builder.Services.AddScoped<UserDAO>();
 builder.Services.AddScoped<UsersService>();
 
 // Configure la base de donnée : ajout JobBoardContext et ce que j'ai mis dans appsettings.json
