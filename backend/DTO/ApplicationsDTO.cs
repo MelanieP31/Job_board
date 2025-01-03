@@ -9,10 +9,7 @@ namespace backend.DTO
         public int JobId {get; set; }
         public string? JobTitle {get; set;}
 
-
-        public int UserId {get; set; }
-        public string? UserName {get; set; }
-        public string? UserEmail {get; set; }
+        public UserDTO? User {get; set; }
 
     }
 }

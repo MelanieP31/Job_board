@@ -1,5 +1,7 @@
+using AutoMapper;
 using backend.Configuration;
 using backend.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
 {
@@ -7,15 +9,20 @@ namespace backend.Services
     {
 
         private readonly JobBoardContext _context;
+        private readonly IMapper _mapper;
 
-        public JobOfferService(JobBoardContext context)
+        public JobOfferService(JobBoardContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public List<Joboffer> GetAllJobOffer()
         {
-            return _context.Joboffers.ToList();
+            return _context.Joboffers
+                .Include(j => j.Company)
+                .Include(j => j.Applications)
+                .ToList();
         }
 
         public Joboffer? GetJobOfferById(int id)

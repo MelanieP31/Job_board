@@ -12,16 +12,7 @@ namespace backend.DTO
         public int CompanyId {get; set;}
         public string? CompanyName {get; set; }  
 
-        public UserDTO? User {get; set; }
-
-        public List<ApplicationsCollection>? appCollection {get; set; }
-    }
-
-    public class ApplicationsCollection {
-        public int appId { get; set; }
-        public DateTime? ApplicationTime {get; set; }
-        public string? Status {get; set; }
-        public string? Message {get; set; }
+        public List<ApplicationsDTO>? Applications {get; set; }
     }
 
 }

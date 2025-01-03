@@ -5,6 +5,9 @@ using Pomelo.EntityFrameworkCore.MySql; // MySQL provider
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Add AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 // Ajout controller
 builder.Services.AddControllers();
 
