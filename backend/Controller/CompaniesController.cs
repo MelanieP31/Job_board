@@ -1,30 +1,33 @@
+using backend.DTO;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace backend.Controller{
+namespace backend.Controller
+{
 
     [Route("/api/companies")]
-    public class CompaniesController : ControllerBase {
+    public class CompaniesController : ControllerBase
+    {
         private readonly CompaniesService _compService;
 
-        public CompaniesController(CompaniesService compService){
+        public CompaniesController(CompaniesService compService)
+        {
             _compService = compService;
         }
 
         //GET all 
         [HttpGet]
-        public IActionResult GetAllCompanies(){
+        public IActionResult GetAllCompanies()
+        {
             var companies = _compService.GetAllCompanies();
             return Ok(companies);
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetCompaniesById(int id)
         {
-
             var companies = _compService.GetCompaniesById(id);
-
             if (companies != null)
             {
                 return Ok(companies);
@@ -36,17 +39,17 @@ namespace backend.Controller{
         }
 
         [HttpPost]
-        public IActionResult AddCompanies([FromBody] Companies comp)
+        public IActionResult AddCompanies([FromBody] CompaniesDTO compDTO)
         {
 
-            if (comp == null)
+            if (compDTO == null)
             {
                 return BadRequest("Invalid data for company");
             }
 
-            _compService.AddCompanies(comp);
+            _compService.AddCompanies(compDTO);
 
-            return CreatedAtAction(nameof(GetCompaniesById), new { id = comp.CompanyId }, comp); 
+            return CreatedAtAction(nameof(GetCompaniesById), new { id = compDTO.CompanyId }, compDTO);
         }
 
         [HttpPut("{id}")]

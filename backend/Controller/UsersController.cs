@@ -1,4 +1,5 @@
 
+using backend.DTO;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,8 +21,8 @@ namespace backend.Controller{
             return Ok(users);
         }
 
-        [HttpGet("id/{id}")]
-        public IActionResult GetUsersById(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetUsersById (int id)
         {
 
             var Users = _userService.GetUserById(id);
@@ -37,17 +38,17 @@ namespace backend.Controller{
         }
 
         [HttpPost]
-        public IActionResult AddUsers([FromBody] Users user)
+        public IActionResult AddUsers([FromBody] UserDTO userDTO)
         {
 
-            if (user == null)
+            if (userDTO == null)
             {
                 return BadRequest("Invalid data for Users");
             }
 
-            _userService.AddUser(user);
+            _userService.AddUser(userDTO);
 
-            return CreatedAtAction(nameof(GetUsersById), new { id = user.UserId }, user); 
+            return CreatedAtAction(nameof(GetUsersById), new { id = userDTO.UserId }, userDTO); 
         }
 
         [HttpPut("{id}")]

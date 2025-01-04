@@ -1,5 +1,7 @@
+using AutoMapper;
 using backend.Configuration;
 using backend.Models;
+using backend.DTO;
 
 namespace backend.Services
 {
@@ -7,20 +9,22 @@ namespace backend.Services
     {
 
         private readonly JobBoardContext _context;
+        private readonly IMapper _mapper;
 
-        public UserCompService(JobBoardContext context)
+        public UserCompService(JobBoardContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public List<Competencies?> GetComptenciesByUserId(int userId)
+        public List<CompetenciesDTO> GetComptenciesByUserId(int userId)
         {
             var competencies = _context.UserCompetencies.Where(c => c.UserId == userId).Select(c => c.Competency).ToList();
             if (competencies == null)
             {
                 throw new Exception("User not found");
             }
-            return competencies;
+            return _mapper.Map<List<CompetenciesDTO>>(competencies);
         }
 
         public void AddCompetencyByUserId(int userId, int competency_id)

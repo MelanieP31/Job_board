@@ -1,6 +1,7 @@
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using backend.DTO;
 
 // Voir toute les applications, 
 //selectionner une application, 
@@ -28,12 +29,10 @@ namespace backend.Controller
             return Ok(applications);
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetApplicationsById(int id)
         {
-
             var applications = _appService.GetApplicationsById(id);
-
             if (applications != null)
             {
                 return Ok(applications);
@@ -45,17 +44,17 @@ namespace backend.Controller
         }
 
         [HttpPost]
-        public IActionResult AddApplications([FromBody] Applications applications)
+        public IActionResult AddApplications([FromBody] ApplicationsDTO applicationsDTO)
         {
 
-            if (applications == null)
+            if (applicationsDTO == null)
             {
                 return BadRequest("Invalid data for applications");
             }
 
-            _appService.AddApplication(applications);
+            _appService.AddApplication(applicationsDTO);
 
-            return CreatedAtAction(nameof(GetApplicationsById), new { id = applications.AppId }, applications); //201 --> + fournit url avec GetApplicationById et l'Id pour voir l'app créer.
+            return CreatedAtAction(nameof(GetApplicationsById), new { id = applicationsDTO.AppId }, applicationsDTO); //201 --> + fournit url avec GetApplicationById et l'Id pour voir l'app créer.
         }
 
         [HttpPut("{id}")]

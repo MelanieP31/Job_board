@@ -1,4 +1,6 @@
+using AutoMapper;
 using backend.Configuration;
+using backend.DTO;
 using backend.Models;
 
 namespace backend.Services
@@ -7,29 +9,33 @@ namespace backend.Services
     {
 
         private readonly JobBoardContext _context;
+        private readonly IMapper _mapper;
 
-        public ExperiencesService(JobBoardContext context)
+        public ExperiencesService(JobBoardContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public List<Experiences> GetAllExperiences()
+        public List<ExperiencesDTO> GetAllExperiences()
         {
-            return _context.Experiences.ToList();
+            var experiences = _context.Experiences.ToList();
+            return _mapper.Map<List<ExperiencesDTO>>(experiences);
         }
 
-        public Experiences? GetExperiencesById(int id)
+        public ExperiencesDTO? GetExperiencesById(int id)
         {
             var experiences = _context.Experiences.FirstOrDefault(u => u.ExperienceId == id);
             if (experiences == null)
             {
                 throw new Exception("Experiences not found");
             }
-            return experiences;
+            return _mapper.Map<ExperiencesDTO>(experiences);
         }
 
-        public void AddExperiences(Experiences experiences)
+        public void AddExperiences(ExperiencesDTO ExperiencesDTO)
         {
+            var experiences = _mapper.Map<Experiences>(ExperiencesDTO);
             _context.Experiences.Add(experiences);
             _context.SaveChanges();
         }
@@ -50,7 +56,7 @@ namespace backend.Services
 
         public void DeleteExperiences(int id)
         {
-            var experiences = GetExperiencesById(id);
+            var experiences = _context.Experiences.FirstOrDefault(u => u.ExperienceId == id);
             if (experiences != null)
             {
                 _context.Experiences.Remove(experiences);

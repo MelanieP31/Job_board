@@ -1,3 +1,4 @@
+using backend.DTO;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace backend.Controller{
             return Ok(Experiences);
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetExperiencesById(int id)
         {
 
@@ -36,17 +37,17 @@ namespace backend.Controller{
         }
 
         [HttpPost]
-        public IActionResult AddExperiences([FromBody] Experiences exp)
+        public IActionResult AddExperiences([FromBody] ExperiencesDTO expDTO)
         {
 
-            if (exp == null)
+            if (expDTO == null)
             {
                 return BadRequest("Invalid data for Experiences");
             }
 
-            _expService.AddExperiences(exp);
+            _expService.AddExperiences(expDTO);
 
-            return CreatedAtAction(nameof(GetExperiencesById), new { id = exp.ExperienceId }, exp); 
+            return CreatedAtAction(nameof(GetExperiencesById), new { id = expDTO.ExperienceId }, expDTO); 
         }
 
         [HttpPut("{id}")]

@@ -30,10 +30,7 @@ namespace backend.Services
 
         public ApplicationsDTO GetApplicationsById(int id)
         {
-            var applications = _context.Applications
-                .Include(a => a.User)
-                .Include(a => a.JobOffer)
-                .FirstOrDefault(u => u.AppId == id);
+            var applications = _context.Applications.ToList();
 
             if (applications == null)
             {
@@ -53,7 +50,7 @@ namespace backend.Services
         public void UpdateApplication(int id, string newStatus)
         {
             var existingApplication = _context.Applications.FirstOrDefault(a => a.AppId == id);
-            if (existingApplication != null)
+            if (existingApplication == null)
             {
                 throw new Exception("Application not found.");
             }

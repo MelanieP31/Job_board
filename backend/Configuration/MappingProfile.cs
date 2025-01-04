@@ -12,7 +12,7 @@ namespace backend.Configuration
 
             CreateMap<Applications, ApplicationsDTO>()
                 .ForMember(d => d.User, opt => opt.MapFrom(src => src.User))
-                .ForMember(d => d.JobId, opt => opt.MapFrom(src => src.JobOffer !=null ? src.JobOffer.JobId : 0))
+                .ForMember(d => d.JobId, opt => opt.MapFrom(src => src.JobOffer.JobId))
                 .ForMember(d => d.JobTitle, opt => opt.MapFrom(src => src.JobOffer != null ? src.JobOffer.Title : ""));
 
             CreateMap<Companies, CompaniesDTO>();

@@ -1,6 +1,9 @@
 
+using AutoMapper;
 using backend.Configuration;
 using backend.Models;
+using backend.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Services
 {
@@ -8,31 +11,41 @@ namespace backend.Services
     {
 
         private readonly JobBoardContext _context;
+        private readonly IMapper _mapper;
 
-        public UsersService(JobBoardContext context)
+        public UsersService(JobBoardContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         //GetAllUser
-        public List<Users> GetAllUsers()
+        public List<UserDTO> GetAllUsers()
         {
-            return _context.Users.ToList();
+            var users= _context.Users
+                .Include(u => u.Applications)
+                .Include(u => u.UserCompetencies)
+                    .ThenInclude(uc => uc.Competency)
+                .Include(u => u.Formations)
+                .Include(u => u.Experiences)
+                .ToList();
+            return _mapper.Map<List<UserDTO>>(users);
         }
 
         //GetUserById
-        public Users? GetUserById(int id)
+        public UserDTO GetUserById(int id)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserId == id);
             if (user == null)
             {
                 throw new Exception("User not found.");
             }
-            return user;
+            return _mapper.Map<UserDTO>(user);
         }
 
-        public void AddUser(Users user)
+        public void AddUser(UserDTO userDTO)
         {
+            var user = _mapper.Map<Users>(userDTO);
             _context.Users.Add(user);
             _context.SaveChanges();
         }
@@ -53,7 +66,7 @@ namespace backend.Services
 
         public void DeleteUser(int id)
         {
-            var user = GetUserById(id);
+            var user = _context.Users.FirstOrDefault(u => u.UserId == id);
             if (user != null)
             {
                 _context.Users.Remove(user);

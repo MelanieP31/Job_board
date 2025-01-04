@@ -16,7 +16,7 @@ namespace backend.Configuration
         public DbSet<Competencies> Competencies {get; set;}
         public DbSet<Experiences> Experiences {get; set;}
         public DbSet<Formations> Formations {get; set;}
-        public DbSet<Joboffer> Joboffers {get; set;}
+        public DbSet<Joboffer> Joboffer {get; set;}
         public DbSet<UserCompetencies> UserCompetencies {get; set;}
         public DbSet<Users> Users {get; set;}
 

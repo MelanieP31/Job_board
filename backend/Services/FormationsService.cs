@@ -1,4 +1,6 @@
+using AutoMapper;
 using backend.Configuration;
+using backend.DTO;
 using backend.Models;
 
 namespace backend.Services
@@ -7,18 +9,21 @@ namespace backend.Services
     {
 
         private readonly JobBoardContext _context;
+        private readonly IMapper _mapper;
 
-        public FormationsService(JobBoardContext context)
+        public FormationsService(JobBoardContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public List<Formations> GetAllFormations()
+        public List<FormationsDTO> GetAllFormations()
         {
-            return _context.Formations.ToList();
+            var formation = _context.Formations.ToList();
+            return _mapper.Map<List<FormationsDTO>>(formation);
         }
 
-        public Formations? GetFormationsById(int id)
+        public FormationsDTO? GetFormationsById(int id)
         {
 
             var formations = _context.Formations.FirstOrDefault(u => u.FormationId == id);
@@ -26,12 +31,13 @@ namespace backend.Services
             {
                 throw new Exception("Formations not found");
             }
-            return formations;
+            return _mapper.Map<FormationsDTO>(formations);
         }
 
-        public void AddFormations(Formations formation)
+        public void AddFormations(FormationsDTO FormationDTO)
         {
-            _context.Formations.Add(formation);
+            var formations = _mapper.Map<Formations>(FormationDTO);
+            _context.Formations.Add(formations);
             _context.SaveChanges();
         }
 
@@ -51,7 +57,7 @@ namespace backend.Services
 
         public void DeleteFormations(int id)
         {
-            var formations = GetFormationsById(id);
+            var formations = _context.Formations.FirstOrDefault(u => u.FormationId == id);
             if (formations != null)
             {
                 _context.Formations.Remove(formations);

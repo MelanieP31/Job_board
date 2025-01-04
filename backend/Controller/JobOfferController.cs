@@ -1,3 +1,4 @@
+using backend.DTO;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,34 +20,27 @@ namespace backend.Controller{
             return Ok(Job);
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetJobOfferById(int id)
         {
-
             var JobOffer = _jobService.GetJobOfferById(id);
-
-            if (JobOffer!= null)
-            {
-                return Ok(JobOffer);
-            }
-            else
+            if (JobOffer== null)
             {
                 return NotFound();
             }
+            
+            return Ok(JobOffer);
         }
 
         [HttpPost]
-        public IActionResult AddJobOffer([FromBody] Joboffer job)
+        public IActionResult AddJobOffer([FromBody] JobofferDTO jobDTO)
         {
-
-            if (job == null)
+            if (jobDTO == null)
             {
                 return BadRequest("Invalid data for JobOffer");
             }
-
-            _jobService.AddJobOffer(job);
-
-            return CreatedAtAction(nameof(GetJobOfferById), new { id = job.JobId }, job); 
+            _jobService.AddJobOffer(jobDTO);
+            return CreatedAtAction(nameof(GetJobOfferById), new { id = jobDTO.JobId }, jobDTO); 
         }
 
         [HttpDelete("{id}")]

@@ -1,5 +1,6 @@
 using AutoMapper;
 using backend.Configuration;
+using backend.DTO;
 using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,36 +18,42 @@ namespace backend.Services
             _mapper = mapper;
         }
 
-        public List<Joboffer> GetAllJobOffer()
+        public List<JobofferDTO> GetAllJobOffer()
         {
-            return _context.Joboffers
+            var jobOffer = _context.Joboffer
                 .Include(j => j.Company)
                 .Include(j => j.Applications)
+                .ThenInclude(a => a.User)
                 .ToList();
+            return _mapper.Map<List<JobofferDTO>>(jobOffer);
         }
 
-        public Joboffer? GetJobOfferById(int id)
+        public JobofferDTO? GetJobOfferById (int id)
         {
-            var jobOffer = _context.Joboffers.FirstOrDefault(u => u.JobId == id);
+            var jobOffer = _context.Joboffer
+                .Include(j => j.Company)
+                .Include(j => j.Applications)
+                .FirstOrDefault(u => u.JobId == id);
             if (jobOffer == null)
             {
                 throw new Exception("JobOffer not found");
             }
-            return jobOffer;
+            return _mapper.Map<JobofferDTO>(jobOffer);
         }
 
-        public void AddJobOffer(Joboffer jobOffer)
+        public void AddJobOffer(JobofferDTO jobOfferDTO)
         {
-            _context.Joboffers.Add(jobOffer);
+            var jobOffer = _mapper.Map<Joboffer>(jobOfferDTO);
+            _context.Joboffer.Add(jobOffer);
             _context.SaveChanges();
         }
 
         public void DeleteJobOffer(int id)
         {
-            var Joboffer = GetJobOfferById(id);
+            var Joboffer = _context.Joboffer.FirstOrDefault(u => u.JobId == id);
             if (Joboffer != null)
             {
-                _context.Joboffers.Remove(Joboffer);
+                _context.Joboffer.Remove(Joboffer);
                 _context.SaveChanges();
             }
             else

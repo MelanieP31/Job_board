@@ -1,3 +1,4 @@
+using backend.DTO;
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace backend.Controller{
             return Ok(Formations);
         }
 
-        [HttpGet("id/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetFormationsById(int id)
         {
 
@@ -36,17 +37,14 @@ namespace backend.Controller{
         }
 
         [HttpPost]
-        public IActionResult AddFormations([FromBody] Formations form)
+        public IActionResult AddFormations([FromBody] FormationsDTO formDTO)
         {
-
-            if (form == null)
+            if (formDTO == null)
             {
                 return BadRequest("Invalid data for Formations");
             }
-
-            _formService.AddFormations(form);
-
-            return CreatedAtAction(nameof(GetFormationsById), new { id = form.FormationId }, form); 
+            _formService.AddFormations(formDTO);
+            return CreatedAtAction(nameof(GetFormationsById), new { id = formDTO.FormationId }, formDTO); 
         }
 
         [HttpPut("{id}")]

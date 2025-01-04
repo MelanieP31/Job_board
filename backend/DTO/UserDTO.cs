@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace backend.DTO
 {
     public class UserDTO
@@ -11,6 +13,7 @@ namespace backend.DTO
         public string? City { get; set; }
         public DateTime? CreationDate { get; set; }
 
+        [JsonIgnore]
         public List<ApplicationsDTO>? AppCollection { get; set; }
         public List<UserCompetenciesDTO>? UserCompetencies { get; set; }
         public List<FormationsDTO>? Formations { get; set; }
