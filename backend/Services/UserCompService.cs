@@ -19,7 +19,7 @@ namespace backend.Services
 
         public List<CompetenciesDTO> GetComptenciesByUserId(int userId)
         {
-            var competencies = _context.UserCompetencies.Where(c => c.UserId == userId).Select(c => c.Competency).ToList();
+            var competencies = _context.User_Competencies.Where(c => c.UserId == userId).Select(c => c.Competency).ToList();
             if (competencies == null)
             {
                 throw new Exception("User not found");
@@ -33,17 +33,17 @@ namespace backend.Services
             userCompetencies.UserId = userId;
             userCompetencies.CompetencyId = competency_id;
 
-            _context.UserCompetencies.Add(userCompetencies);
+            _context.User_Competencies.Add(userCompetencies);
             _context.SaveChanges();
         }
 
         public void DeleteCompetencyByUserId(int userId, int competency_id)
         {
-            var competency = _context.UserCompetencies
+            var competency = _context.User_Competencies
                  .FirstOrDefault(c => c.UserId == userId && c.CompetencyId == competency_id);
             if (competency != null)
             {
-                _context.UserCompetencies.Remove(competency);
+                _context.User_Competencies.Remove(competency);
                 _context.SaveChanges();
             }
         }

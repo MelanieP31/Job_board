@@ -18,6 +18,7 @@ builder.Services.AddScoped<ExperiencesService>();
 builder.Services.AddScoped<FormationsService>();
 builder.Services.AddScoped<JobOfferService>();
 builder.Services.AddScoped<UserCompService>();
+builder.Services.AddScoped<CompetenciesServices>();
 builder.Services.AddScoped<UsersService>();
 
 // Configure la base de donnée : ajout JobBoardContext et ce que j'ai mis dans appsettings.json

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace backend.DTO
 {
     public class ExperiencesDTO{
@@ -8,8 +10,11 @@ namespace backend.DTO
         public DateTime? EndDate {get; set; }
         public string? Description {get; set; }
 
+        [JsonIgnore]
         public int UserId {get; set; }
+        [JsonIgnore]
         public string? UserName {get; set; }
+        [JsonIgnore]        
         public string? UserEmail {get; set; }
 
     }

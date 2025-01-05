@@ -17,7 +17,8 @@ namespace backend.Configuration
 
             CreateMap<Companies, CompaniesDTO>();
        
-            CreateMap<Competencies, CompetenciesDTO>();
+            CreateMap<Competencies, CompetenciesDTO>()
+                .ForMember(d => d.CompetencyName, opt => opt.MapFrom(src => src.Name));
 
             CreateMap<Experiences, ExperiencesDTO>()
                 .ForMember(d => d.UserId, opt => opt.MapFrom(src => src.User != null ? src.User.UserId : 0))
