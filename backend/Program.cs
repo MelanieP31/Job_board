@@ -32,6 +32,13 @@ builder.Services.AddDbContext<JobBoardContext>(options =>
 
 var app = builder.Build();
 
+app.UseCors(builder => 
+    builder.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+
+
+
 //app.UseHttpsRedirection();
 
 app.UseAuthorization();

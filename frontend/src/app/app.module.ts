@@ -1,30 +1,22 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AdvertisementsComponent } from './advertisements/advertisements.component';
-import { CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { JobOfferComponent } from './job-offer/job-offer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavBarComponent,
-    AdvertisementsComponent,
+    JobOfferComponent
   ],
   imports: [
     BrowserModule,
-    CommonModule,
     AppRoutingModule,
-    NgbModule
+    HttpClientModule
   ],
-  providers: [
-    provideClientHydration(),
-    provideHttpClient(withInterceptorsFromDi())
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
