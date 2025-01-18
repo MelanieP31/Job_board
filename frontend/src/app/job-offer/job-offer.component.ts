@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { JobOffer } from '../modele/job-offer';
-import { JobOfferService } from '../services/job-offer.service';
+import { JobOffer } from '../modele/modele';
+import { JobOfferService } from '../services/services';
 
 @Component({
   selector: 'app-job-offer',
